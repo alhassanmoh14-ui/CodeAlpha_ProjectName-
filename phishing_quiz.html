@@ -1,0 +1,409 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phishing Awareness Quiz</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #eef2f7;
+    margin: 0;
+    padding: 25px;
+    color: #172033;
+}
+
+.container {
+    max-width: 750px;
+    margin: 30px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+}
+
+h1 {
+    text-align: center;
+    color: #153e75;
+}
+
+.subtitle {
+    text-align: center;
+    color: #64748b;
+}
+
+.question {
+    padding: 18px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.question p {
+    font-weight: bold;
+    line-height: 1.5;
+}
+
+.option {
+    display: block;
+    padding: 10px;
+    margin: 8px 0;
+    background: #f1f5f9;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.option:hover {
+    background: #dbeafe;
+}
+
+button {
+    background: #155eaa;
+    color: white;
+    border: none;
+    padding: 13px 22px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+button:hover {
+    background: #0f3f75;
+}
+
+.feedback {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 6px;
+    line-height: 1.5;
+}
+
+.correct {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.incorrect {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+#result {
+    margin-top: 25px;
+    padding: 20px;
+    background: #e0f2fe;
+    border-radius: 8px;
+    text-align: center;
+    display: none;
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        padding: 18px;
+        margin: 10px auto;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Phishing Awareness Quiz</h1>
+
+<p class="subtitle">
+CodeAlpha Cybersecurity Internship Project
+</p>
+
+<p>
+Test your knowledge of phishing attacks, suspicious links,
+fake websites, and online safety.
+</p>
+
+<form id="quizForm"></form>
+
+<button type="button" onclick="submitQuiz()">
+Submit Answers
+</button>
+
+<div id="result"></div>
+
+<button type="button" onclick="restartQuiz()">
+Retake Quiz
+</button>
+
+</div>
+
+<script>
+
+const questions = [
+
+{
+question: "1. What is phishing?",
+options: [
+"An online shopping method",
+"A cyberattack that tricks people into revealing information",
+"A computer programming language",
+"A method of updating software"
+],
+answer: 1,
+explanation: "Phishing is a cyberattack that uses deception to steal information or make victims perform unsafe actions."
+},
+
+{
+question: "2. An email says your student account will close in 15 minutes. What should you do?",
+options: [
+"Click its link immediately",
+"Send your password to the sender",
+"Visit the official university portal independently",
+"Forward your password to a friend"
+],
+answer: 2,
+explanation: "Verify the message through an official website or a known IT support contact."
+},
+
+{
+question: "3. Does HTTPS guarantee that a website is legitimate?",
+options: [
+"Yes, always",
+"No, a phishing website can also use HTTPS",
+"Only on mobile phones",
+"Only when the website has images"
+],
+answer: 1,
+explanation: "HTTPS encrypts the connection, but it does not prove that the website owner is trustworthy."
+},
+
+{
+question: "4. Which part of this URL is the actual domain? https://example.com.attacker.test/login",
+options: [
+"example.com",
+"attacker.test",
+"login",
+"https"
+],
+answer: 1,
+explanation: "The registered domain here is attacker.test. The words example.com are only part of a subdomain."
+},
+
+{
+question: "5. A suspicious text message asks you to pay a delivery fee through a link. What type of attack might this be?",
+options: [
+"Smishing",
+"Vishing",
+"SQL injection",
+"Shoulder surfing"
+],
+answer: 0,
+explanation: "Smishing is phishing carried out through SMS or text messages."
+},
+
+{
+question: "6. Someone calls claiming to be IT support and asks for your MFA verification code. What should you do?",
+options: [
+"Give the code to prove your identity",
+"Send the code by text",
+"Refuse and contact IT through a trusted channel",
+"Share your password instead"
+],
+answer: 2,
+explanation: "Never share verification codes. End the call and independently contact your real IT department."
+},
+
+{
+question: "7. What is spear phishing?",
+options: [
+"A random software update",
+"A targeted phishing attack aimed at a specific person or organization",
+"A method of encrypting files",
+"A type of computer hardware"
+],
+answer: 1,
+explanation: "Spear phishing uses personalized information to make a fraudulent message more convincing."
+},
+
+{
+question: "8. You entered your password on a suspected fake website. What should you do?",
+options: [
+"Ignore the incident",
+"Change the password from a trusted device and report it",
+"Share the password with friends",
+"Continue using the website"
+],
+answer: 1,
+explanation: "Change the exposed password promptly, update reused passwords, report the incident, and review active sessions."
+},
+
+{
+question: "9. What is the safest way to access your bank account?",
+options: [
+"Click a random link in an email",
+"Use an official banking app or type the known website address",
+"Use a link from an unknown text message",
+"Search for a login link in an unexpected email"
+],
+answer: 1,
+explanation: "Use your bank's official app or a known website address rather than unexpected links."
+},
+
+{
+question: "10. An unexpected attachment arrives from an address that looks familiar. What should you do?",
+options: [
+"Open it immediately",
+"Enable macros if requested",
+"Verify the message with the sender through another trusted channel",
+"Forward it to everyone"
+],
+answer: 2,
+explanation: "Familiar-looking accounts can be compromised or impersonated. Verify unexpected attachments before opening them."
+}
+
+];
+
+function loadQuiz() {
+
+    const form = document.getElementById("quizForm");
+    form.innerHTML = "";
+
+    questions.forEach((q, index) => {
+
+        const section = document.createElement("div");
+        section.className = "question";
+
+        let html = `<p>${q.question}</p>`;
+
+        q.options.forEach((option, optionIndex) => {
+
+            html += `
+            <label class="option">
+                <input type="radio"
+                       name="question${index}"
+                       value="${optionIndex}">
+                ${option}
+            </label>
+            `;
+
+        });
+
+        html += `<div id="feedback${index}"></div>`;
+
+        section.innerHTML = html;
+        form.appendChild(section);
+
+    });
+
+}
+
+function submitQuiz() {
+
+    let score = 0;
+    let unanswered = [];
+
+    questions.forEach((q, index) => {
+
+        const selected = document.querySelector(
+            `input[name="question${index}"]:checked`
+        );
+
+        const feedback = document.getElementById(
+            `feedback${index}`
+        );
+
+        if (!selected) {
+            unanswered.push(index + 1);
+            feedback.textContent = "Please select an answer.";
+            feedback.className = "feedback incorrect";
+            return;
+        }
+
+        const userAnswer = Number(selected.value);
+
+        if (userAnswer === q.answer) {
+
+            score++;
+
+            feedback.textContent =
+                "Correct! " + q.explanation;
+
+            feedback.className = "feedback correct";
+
+        } else {
+
+            feedback.textContent =
+                "Incorrect. " + q.explanation;
+
+            feedback.className = "feedback incorrect";
+
+        }
+
+    });
+
+    if (unanswered.length > 0) {
+
+        alert(
+            "Please answer all questions before submitting."
+        );
+
+        return;
+    }
+
+    const percentage = (score / questions.length) * 100;
+
+    let message;
+
+    if (score >= 9) {
+        message = "Excellent! You have a strong understanding of phishing awareness.";
+    } else if (score >= 7) {
+        message = "Good work! Review the questions you missed.";
+    } else if (score >= 5) {
+        message = "Fair effort. You should review the training material.";
+    } else {
+        message = "Keep learning. Revisit the presentation and try again.";
+    }
+
+    const result = document.getElementById("result");
+
+    result.style.display = "block";
+
+    result.innerHTML = `
+        <h2>Your Results</h2>
+        <h1>${score} / ${questions.length}</h1>
+        <h3>${percentage}%</h3>
+        <p>${message}</p>
+    `;
+
+    result.scrollIntoView({ behavior: "smooth" });
+
+}
+
+function restartQuiz() {
+
+    document.getElementById("quizForm").reset();
+
+    document.getElementById("result").style.display = "none";
+
+    loadQuiz();
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+}
+
+loadQuiz();
+
+</script>
+
+</body>
+</html>
